@@ -1,0 +1,35 @@
+name: CI
+
+# specifies when a job runs
+on:
+  push: # push to the main branch; can add more branches
+    branches:
+      - main
+  pull_request: # create a PR to the main branch
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7 # if we want to use a predefined github action
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify application
+        run: npm run verify
